@@ -16,31 +16,38 @@ int main() {
     printf("Enter the size of vector (n): ");
     scanf_s("%d", &n);
 
-    float* X = (float*)malloc(n * sizeof(float));
-    float* Y = (float*)malloc(n * sizeof(float));
+    float* X = (float*)malloc((n + 1) * sizeof(float));
+    float* Y = (float*)malloc((n + 1) * sizeof(float));
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i <= n; i++) {
         X[i] = i + 1;
     }
+
+    // Vector initialization testing
+    /*
+    for (int i = 0; i <= n; i++) {
+        printf("%.2f ", X[i]);
+    }
+    */
 
     stencil(X, Y, n);
 
     printf("Vector Y (stencil function): ");
-    for (int i = 0; i < n; i++) {
+    for (int i = 3; i <= n - 3; i++) {
         printf("%.2f ", Y[i]);
     }
     printf("\n");
 
-    /*
-    stencil_x86(X, Y, n);
+    // stencil_x86(X, Y, n);
 
+    /*
     printf("Vector Y (stencil_x86 function): ");
     for (int i = 0; i < n; i++) {
         printf("%.2f ", Y[i]);
     }
     printf("\n"); 
     */
-
+    
     free(X);
     free(Y);
 
