@@ -4,7 +4,7 @@
 #include <math.h>
 #include <time.h>
 
-extern float stencil_x86(float* X, float* Y, int n);
+extern float stencil_x86(float* X, float* Y, int i);
 
 void stencil(float X[], float Y[], int n) {
     for (int i = 3; i <= n - 3; i++) {
@@ -18,6 +18,7 @@ int main() {
 
     printf("Enter the exponent (n) to determine the size of the vector (2^n): ");
     scanf_s("%d", &n);
+    printf("\n");
 
     size = (int)pow(2, n);
 
@@ -45,6 +46,14 @@ int main() {
         stencil(X, Y, size);
         end = clock();
         time_c += ((double)(end - start)) / CLOCKS_PER_SEC;
+
+        //Print first 10 elements of C output
+        printf("First 10 elements of C version: \n");
+        for (int l = 3; l < 10 + 3; l++) {
+            printf("%.2f ", Y[l]);
+        }
+        printf("\n");
+
         printf("Execution time for C version: %f seconds \n", ((double)(end - start)) / CLOCKS_PER_SEC);
 
         // x86 kernel timing
@@ -54,22 +63,30 @@ int main() {
         }
         end = clock();
         time_x86 += ((double)(end - start)) / CLOCKS_PER_SEC;
-        printf("Execution time for x86 version: %f seconds \n", ((double)(end - start)) / CLOCKS_PER_SEC);
+
+        //Print first 10 elements of x86 output
+        printf("First 10 elements of x86-64 version: \n");
+        for (int m = 3; m < 10 + 3; m++) {
+            printf("%.2f ", Y_x86[m]);
+        }
+        printf("\n");
+
+        printf("Execution time for x86-64 version: %f seconds \n", ((double)(end - start)) / CLOCKS_PER_SEC);
 
         // Output vector Y comparison
-        printf("Comparison of Y values between C and x86 versions: \n");
+        printf("Comparison of Y values between C and x86-64 versions: \n");
         for (int k = 0; k < size; k++) {
             if (Y[k] != Y_x86[k]) {
-                printf("Difference found (Y[%d] (C) = %.6f, Y[%d] (x86) = %.6f). \n", i, Y[i], i, Y_x86[i]);
+                printf("Difference found (Y[%d] (C) = %.6f, Y[%d] (x86-64) = %.6f). \n", i, Y[i], i, Y_x86[i]);
                 differences++;
             }
         }
 
         if (!differences) {
-            printf("x86 version is correct. \n");
+            printf("x86-64 version is correct. \n");
         }
         else {
-            printf("x86 version is incorrect. \n");
+            printf("x86-64 version is incorrect. \n");
         }
 
         printf("\n");
@@ -80,7 +97,7 @@ int main() {
     time_c /= iterations;
     printf("Average execution time for C version: %f seconds \n", time_c);
     time_x86 /= iterations;
-    printf("Average execution time for x86 version: %f seconds \n", time_x86);
+    printf("Average execution time for x86-64 version: %f seconds \n", time_x86);
     
     free(X);
     free(Y);
