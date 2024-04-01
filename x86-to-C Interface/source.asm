@@ -13,16 +13,12 @@ stencil_x86:
     MOV r9, r8          ; copy the index to r9
     MOV rdi, rcx        ; base address of X
     MOV rsi, rdx        ; base address of Y
-
-    ; Calculate the address of X[i]
     IMUL r9, r9, 4      ; multiply index by 4 (size of float)
     ADD r9, rdi         ; address of X[i] = rdi + r9
-
-    ; Calculate the address of Y[i]
     IMUL r8, r8, 4      ; multiply index by 4 (size of float)
     ADD r8, rsi         ; address of Y[i] = rsi + r8
 
-    ; Load X[i] and adjacent values
+    ; Y[i] = X[i - 3] + X[i - 2] + X[i - 1] + X[i] + X[i + 1] + X[i + 2] + X[i + 3]
     MOVSS xmm0, [r9 - 12]  ; xmm0 = X[i - 3]
     MOVSS xmm1, [r9 - 8]   ; xmm1 = X[i - 2]
     MOVSS xmm2, [r9 - 4]   ; xmm2 = X[i - 1]
@@ -31,15 +27,11 @@ stencil_x86:
     MOVSS xmm5, [r9 + 8]   ; xmm5 = X[i + 2]
     MOVSS xmm6, [r9 + 12]  ; xmm6 = X[i + 3]
 
-    ; Perform the stencil operation
     ADDSS xmm0, xmm1 ; xmm0 = X[i - 3] + X[i - 2]
     ADDSS xmm0, xmm2 ; xmm0 += X[i - 1]
     ADDSS xmm0, xmm3 ; xmm0 += X[i]
     ADDSS xmm0, xmm4 ; xmm0 += X[i + 1]
     ADDSS xmm0, xmm5 ; xmm0 += X[i + 2]
     ADDSS xmm0, xmm6 ; xmm0 += X[i + 3]
-
-    ; Store the result in Y[i]
-    ;MOVSS [r8], xmm0 ; store result in Y[i]
 
     ret
