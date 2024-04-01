@@ -25,84 +25,62 @@ int main() {
     float* Y = (float*)malloc(size * sizeof(float));
     float* Y_x86 = (float*)malloc(size * sizeof(float));
 
+    // Input vector X initialization
     srand((unsigned int)time(NULL));
 
     for (int i = 0; i < size; i++) {
         X[i] = (float)rand() / RAND_MAX;
     }
 
-    // Testing for C kernel
-    
-    stencil(X, Y, size);
-
-    printf("Vector Y (stencil function): ");
-    for (int i = 3; i < size - 3; i++) {
-        printf("%.2f ", Y[i]);
-    }
-    printf("\n");
-    
-
-    /*clock_t start, end;
-    double cpu_time_used;
-    int iterations = 30;*/
-
-    // Timing for C kernel 
-    /*start = clock();
+    clock_t start, end;
+    double time_c = 0;
+    double time_x86 = 0;
+    int iterations = 30;
 
     for (int i = 0; i < iterations; i++) {
+        printf("ITERATION %d \n", i + 1);
+
+        // C kernel timing
+        start = clock();
         stencil(X, Y, size);
-    }
-    
-    end = clock();
+        end = clock();
+        time_c += ((double)(end - start)) / CLOCKS_PER_SEC;
+        printf("Execution time for C version: %f seconds \n", ((double)(end - start)) / CLOCKS_PER_SEC);
 
-    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC / iterations;
-    printf("Average execution time for C version: %f seconds \n", cpu_time_used);
-    */
-
-    // Testing for x86 kernel
-
-    for (int i = 3; i <= size - 3; i++) {
-        Y_x86[i] = stencil_x86(X, Y, size);
-    }
-
-    printf("Vector Y (stencil_x86 function): ");
-    for (int i = 3; i < size - 3; i++) {
-        printf("%.2f ", Y_x86[i]);
-    }
-    printf("\n");
-    
-
-    // Timing for x86 kernel 
-    /*
-    start = clock();
-
-    for (int i = 0; i < iterations; i++) {
-        stencil_x86(X, Y_x86, size);
-    }
-
-    end = clock();
-
-    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC / iterations;
-    printf("Average execution time for x86 version: %f seconds \n", cpu_time_used);
-    */
-
-    // Comparison of resulting vectors 
-    /*
-    printf("Comparison of Y values between C and x86 versions: \n");
-    for (int i = 0; i < size; i++) {
-        if (Y[i] != Y_x86[i]) {
-            printf("Difference found (Y[%d] (C) = %.6f, Y[%d] (x86) = %.6f). \n", i, Y[i], i, Y_x86[i]);
-            differences++;
+        // x86 kernel timing
+        start = clock();
+        for (int j = 3; j <= size - 3; j++) {
+            Y_x86[j] = stencil_x86(X, Y, j);
         }
+        end = clock();
+        time_x86 += ((double)(end - start)) / CLOCKS_PER_SEC;
+        printf("Execution time for x86 version: %f seconds \n", ((double)(end - start)) / CLOCKS_PER_SEC);
+
+        // Output vector Y comparison
+        printf("Comparison of Y values between C and x86 versions: \n");
+        for (int k = 0; k < size; k++) {
+            if (Y[k] != Y_x86[k]) {
+                printf("Difference found (Y[%d] (C) = %.6f, Y[%d] (x86) = %.6f). \n", i, Y[i], i, Y_x86[i]);
+                differences++;
+            }
+        }
+
+        if (!differences) {
+            printf("x86 version is correct. \n");
+        }
+        else {
+            printf("x86 version is incorrect. \n");
+        }
+
+        printf("\n");
     }
-    
-    if (!differences) {
-        printf("x86 version is correct. \n");
-    }
-    else {
-        printf("x86 version is incorrect. \n");
-    }
-    */
+
+    // Average execution time
+    printf("SUMMARY \n");
+    time_c /= iterations;
+    printf("Average execution time for C version: %f seconds \n", time_c);
+    time_x86 /= iterations;
+    printf("Average execution time for x86 version: %f seconds \n", time_x86);
     
     free(X);
     free(Y);
