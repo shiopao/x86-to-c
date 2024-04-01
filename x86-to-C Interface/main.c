@@ -4,7 +4,7 @@
 #include <math.h>
 #include <time.h>
 
-extern void stencil_x86(float* X, float* Y, int n);
+extern float stencil_x86(float* X, float* Y, int n);
 
 void stencil(float X[], float Y[], int n) {
     for (int i = 3; i <= n - 3; i++) {
@@ -32,7 +32,7 @@ int main() {
     }
 
     // Testing for C kernel
-    /*
+    
     stencil(X, Y, size);
 
     printf("Vector Y (stencil function): ");
@@ -40,14 +40,14 @@ int main() {
         printf("%.2f ", Y[i]);
     }
     printf("\n");
-    */
+    
 
-    clock_t start, end;
+    /*clock_t start, end;
     double cpu_time_used;
-    int iterations = 30;
+    int iterations = 30;*/
 
     // Timing for C kernel 
-    start = clock();
+    /*start = clock();
 
     for (int i = 0; i < iterations; i++) {
         stencil(X, Y, size);
@@ -57,17 +57,20 @@ int main() {
 
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC / iterations;
     printf("Average execution time for C version: %f seconds \n", cpu_time_used);
+    */
 
     // Testing for x86 kernel
-    /*
-    stencil_x86(X, Y, size);
 
-    printf("Vector Y (stencil function): ");
-    for (int i = 0; i < size; i++) {
-        printf("%.2f ", Y[i]);
+    for (int i = 3; i <= size - 3; i++) {
+        Y_x86[i] = stencil_x86(X, Y, size);
+    }
+
+    printf("Vector Y (stencil_x86 function): ");
+    for (int i = 3; i < size - 3; i++) {
+        printf("%.2f ", Y_x86[i]);
     }
     printf("\n");
-    */
+    
 
     // Timing for x86 kernel 
     /*
