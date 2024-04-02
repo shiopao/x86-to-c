@@ -4,7 +4,7 @@
 #include <math.h>
 #include <time.h>
 
-extern float stencil_x86(float* X, float* Y, int i);
+extern float stencil_x86(float* X, int i);
 
 void stencil(float X[], float Y[], int n) {
     for (int i = 3; i <= n - 3; i++) {
@@ -59,7 +59,7 @@ int main() {
         // x86 kernel timing
         start = clock();
         for (int j = 3; j <= size - 3; j++) {
-            Y_x86[j] = stencil_x86(X, Y, j);
+            Y_x86[j] = stencil_x86(X, j);
         }
         end = clock();
         time_x86 += ((double)(end - start)) / CLOCKS_PER_SEC;
@@ -77,7 +77,7 @@ int main() {
         printf("Comparison of Y values between C and x86-64 versions: \n");
         for (int k = 0; k < size; k++) {
             if (Y[k] != Y_x86[k]) {
-                printf("Difference found (Y[%d] (C) = %.6f, Y[%d] (x86-64) = %.6f). \n", i, Y[i], i, Y_x86[i]);
+                // printf("Difference found (Y[%d] (C) = %.6f, Y[%d] (x86-64) = %.6f). \n", i, Y[i], i, Y_x86[i]);
                 differences++;
             }
         }
