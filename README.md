@@ -1,4 +1,6 @@
 # x86-to-C Interface
+A kernel that performs 1-D stencil of a vector x is to be written in (1) C program and (2) an x86-64 assembly language. Kernel performance of the two code versions shall be done. <br>
+
 **Input:** Scalar variable n (integer) contains the length of the vector; Vectors X and Y are both single-precision float. <br>
 **Process:** $`Y[i] = X[i - 3] + X[i - 2] + X[i - 1] + X[i] + X[i + 1] + X[i + 2] + X[i + 3]`$ <br>
 **Output:** Store result in vector Y. Display the result of 1st ten elements of vector Y for all versions of kernel (i.e., C and x86-64).
