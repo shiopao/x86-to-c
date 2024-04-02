@@ -79,7 +79,6 @@ int main() {
         printf("Comparison of Y values between C and x86-64 versions: \n");
         for (int k = 3; k <= size - 3; k++) {
             if (fabs(Y[k] - Y_x86[k]) > 1e-6) {
-                // printf("Difference found (Y[%d] (C) = %.6f, Y[%d] (x86-64) = %.6f). \n", i, Y[i], i, Y_x86[i]);
                 differences++;
             }
         }
