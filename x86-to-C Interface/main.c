@@ -84,7 +84,7 @@ int main() {
             }
         }
 
-        if (differences) {
+        if (!differences) {
             printf("x86-64 version is correct. \n");
         }
         else {
