@@ -8,7 +8,7 @@ stencil_x86:
     ; Parameters
     ; rcx: address of input vector X
     ; rdx: index of the cell (i)
-
+    
     MOV r9, rdx         ; copy the index to r9
     MOV rdi, rcx        ; base address of X
     IMUL r9, r9, 4      ; multiply index by 4 (size of float)

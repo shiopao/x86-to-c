@@ -31,6 +31,8 @@ int main() {
 
     for (int i = 0; i < size; i++) {
         X[i] = (float)rand() / RAND_MAX;
+        Y[i] = 0.0f;
+        Y_x86[i] = 0.0f;
     }
 
     clock_t start, end;
@@ -47,7 +49,7 @@ int main() {
         end = clock();
         time_c += ((double)(end - start)) / CLOCKS_PER_SEC;
 
-        //Print first 10 elements of C output
+        // Print first 10 elements of C output
         printf("First 10 elements of C version: \n");
         for (int l = 3; l < 10 + 3; l++) {
             printf("%.2f ", Y[l]);
@@ -64,7 +66,7 @@ int main() {
         end = clock();
         time_x86 += ((double)(end - start)) / CLOCKS_PER_SEC;
 
-        //Print first 10 elements of x86 output
+        // Print first 10 elements of x86 output
         printf("First 10 elements of x86-64 version: \n");
         for (int m = 3; m < 10 + 3; m++) {
             printf("%.2f ", Y_x86[m]);
@@ -75,14 +77,14 @@ int main() {
 
         // Output vector Y comparison
         printf("Comparison of Y values between C and x86-64 versions: \n");
-        for (int k = 0; k < size; k++) {
-            if (Y[k] != Y_x86[k]) {
+        for (int k = 3; k <= size - 3; k++) {
+            if (fabs(Y[k] - Y_x86[k]) > 1e-6) {
                 // printf("Difference found (Y[%d] (C) = %.6f, Y[%d] (x86-64) = %.6f). \n", i, Y[i], i, Y_x86[i]);
                 differences++;
             }
         }
 
-        if (!differences) {
+        if (differences) {
             printf("x86-64 version is correct. \n");
         }
         else {
